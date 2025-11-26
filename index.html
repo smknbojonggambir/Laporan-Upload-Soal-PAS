@@ -3,204 +3,110 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Laporan Upload Soal PAS — SMKN Bojonggambir</title>
+  <title>Laporan Upload Soal – Simpel</title>
   <style>
-    :root{--bg:#f6f8fb;--card:#ffffff;--muted:#6b7280;--accent:#2563eb}
-    *{box-sizing:border-box}
-    body{font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Arial; margin:0; background:var(--bg); color:#0f172a}
-    header{background:linear-gradient(90deg,#0ea5e9,#7c3aed); color:white; padding:32px 20px}
-    .container{max-width:1100px;margin:20px auto;padding:0 16px}
-    h1{margin:0;font-size:1.5rem}
-    p.lead{margin:8px 0 0;opacity:0.95}
-    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:18px}
-    .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(15,23,42,0.06)}
-    .card h3{margin:0;font-size:0.85rem;color:var(--muted)}
-    .card p{margin:8px 0 0;font-size:1.3rem;font-weight:700}
-    .main{display:grid;grid-template-columns:1fr;gap:16px;margin-top:20px}
-    .panel{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(15,23,42,0.04)}
-    .table-wrap{overflow:auto}
-    table{width:100%;border-collapse:collapse;font-size:0.95rem}
-    th,td{padding:10px 12px;text-align:left;border-bottom:1px solid #eef2f7}
-    th{background:#fbfdff;position:sticky;top:0}
-    .muted{color:var(--muted)}
-    footer{max-width:1100px;margin:20px auto;padding:12px 16px;color:var(--muted);font-size:0.9rem}
-    .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .btn{background:var(--accent);color:white;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
-    input.search{padding:8px 12px;border-radius:8px;border:1px solid #e6edf6}
-    .small{font-size:0.85rem;color:var(--muted)}
-    @media(min-width:900px){.main{grid-template-columns:2fr 1fr}}
-    .iframe-embed{width:100%;height:520px;border-radius:8px;border:1px solid #e6edf6}
+    body{font-family:Arial, sans-serif; margin:0; background:#f2f4f7; color:#333}
+    header{background:#4f46e5; color:white; padding:28px 20px; text-align:center}
+    h1{margin:0; font-size:1.6rem}
+
+    .container{max-width:900px; margin:auto; padding:16px}
+
+    .summary{display:flex; gap:10px; flex-wrap:wrap; margin-top:18px}
+    .box{flex:1; min-width:150px; background:white; padding:16px; border-radius:10px; text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.08)}
+    .box h3{margin:0; font-size:0.9rem; color:#555}
+    .box p{margin-top:6px; font-size:1.4rem; font-weight:bold; color:#111}
+
+    .panel{background:white; padding:16px; border-radius:10px; margin-top:20px; box-shadow:0 3px 10px rgba(0,0,0,0.05)}
+
+    table{width:100%; border-collapse:collapse; margin-top:12px; font-size:0.92rem}
+    th,td{padding:10px; border-bottom:1px solid #eee; text-align:left}
+    th{background:#f9fafb; font-weight:bold}
+
+    input{width:100%; padding:10px; border-radius:8px; border:1px solid #ccc}
+
+    .small{font-size:0.8rem; color:#777; margin-top:8px}
   </style>
 </head>
 <body>
 <header>
-  <div class="container">
-    <h1>📊 Laporan Upload Soal PAS — SMKN Bojonggambir</h1>
-    <p class="lead">Data otomatis terupdate langsung dari Google Sheet. Gunakan pencarian atau filter untuk menemukan entri spesifik.</p>
-  </div>
+  <h1>📊 Laporan Upload Soal</h1>
+  <p style="margin-top:6px">Update otomatis dari Google Sheet</p>
 </header>
-<main class="container">
-  <section class="cards">
-    <div class="card">
-      <h3>Total Upload</h3>
-      <p id="totalUploads">—</p>
-      <p class="small muted">(Jumlah baris data)</p>
-    </div>
-    <div class="card">
-      <h3>Total Kelas Terisi</h3>
-      <p id="totalClasses">—</p>
-      <p class="small muted">(Kelas unik)</p>
-    </div>
-    <div class="card">
-      <h3>Total Jumlah Soal</h3>
-      <p id="totalQuestions">—</p>
-      <p class="small muted">(Penjumlahan kolom Jumlah Soal)</p>
-    </div>
-  </section>
 
-  <section class="main">
-    <div class="panel">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-        <div class="controls">
-          <input id="q" class="search" placeholder="Cari nama guru / mata pelajaran / kelas" />
-          <button class="btn" id="refreshBtn">Refresh</button>
-        </div>
-        <div class="small muted">Terakhir disegarkan: <span id="lastRef">-</span></div>
-      </div>
+<div class="container">
 
-      <div style="margin-top:12px" class="table-wrap">
-        <table id="dataTable">
-          <thead>
-            <tr>
-              <th>Jam Upload Dokumen</th>
-              <th>Nama Guru</th>
-              <th>Mata Pelajaran</th>
-              <th>Kelas</th>
-              <th>Jumlah Soal</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+  <!-- Summary -->
+  <div class="summary">
+    <div class="box"><h3>Total Upload</h3><p id="totalUploads">—</p></div>
+    <div class="box"><h3>Total Kelas</h3><p id="totalClasses">—</p></div>
+    <div class="box"><h3>Total Soal</h3><p id="totalQuestions">—</p></div>
+  </div>
 
-      <p class="small muted" style="margin-top:10px">Jika tabel kosong, pastikan Google Sheet sudah dibagikan atau sheet bernama "Rekap" ada pada dokumen.</p>
+  <div class="panel">
+    <input id="search" placeholder="Cari guru, mapel, kelas..." />
+    <table>
+      <thead>
+        <tr>
+          <th>Jam Upload</th>
+          <th>Nama Guru</th>
+          <th>Mapel</th>
+          <th>Kelas</th>
+          <th>Soal</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+    <p class="small">Terakhir update: <span id="lastUpdate">—</span></p>
+  </div>
 
-    </div>
-
-    <aside class="panel">
-      <h3 style="margin-top:0">Tampilan Alternatif</h3>
-      <p class="small muted">Jika Anda ingin menampilkan versi iframe langsung dari Google Sheet (lebih cepat pasang), gunakan embed di bawah:</p>
-      <iframe class="iframe-embed" src="https://docs.google.com/spreadsheets/d/1eMO8-evONR5nk8_0k5hBEKF8ZYXcCC-h1htBC7h4RVs/htmlview?widget=true&amp;headers=false"></iframe>
-
-      <h4 style="margin-top:12px">Petunjuk Pasang ke Google Sites</h4>
-      <ol class="small muted">
-        <li>Buka Google Sites → Insert → Embed → Paste HTML (atau paste URL iframe).</li>
-        <li>Atur lebar & tinggi sesuai tampilan.</li>
-        <li>Publish dan cek tampilan mobile/desktop.</li>
-      </ol>
-    </aside>
-  </section>
-
-</main>
-<footer>
-  <div class="container">Template dibuat otomatis. Edit <code>SPREADSHEET_ID</code> pada script jika ingin gunakan file sheet lain.</div>
-</footer>
+</div>
 
 <script>
-// CONFIG: ganti ID spreadsheet jika perlu
-const SPREADSHEET_ID = '1eMO8-evONR5nk8_0k5hBEKF8ZYXcCC-h1htBC7h4RVs';
-const SHEET_NAME = 'Rekap';
-const REFRESH_INTERVAL_MS = 60 * 1000; // refresh tiap 60 detik
+const SHEET_ID = "1eMO8-evONR5nk8_0k5hBEKF8ZYXcCC-h1htBC7h4RVs";
+const SHEET_NAME = "Rekap";
+let allData = [];
 
-// Helper: ambil data gviz JSON
-async function fetchSheet() {
-  const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
-  const res = await fetch(url);
-  if(!res.ok) throw new Error('Gagal mengambil sheet: ' + res.status);
-  const text = await res.text();
-  // gviz returns something like: /*O_o*/\ngoogle.visualization.Query.setResponse({...});
-  const jsonText = text.replace(/^[^\{]*\(/, '').replace(/\);?\s*$/, '');
-  return JSON.parse(jsonText);
+async function loadData(){
+  try{
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+    const raw = await fetch(url).then(r=>r.text());
+    const json = JSON.parse(raw.substring(raw.indexOf('{'), raw.lastIndexOf('}')+1));
+
+    const rows = json.table.rows.map(r => r.c.map(c => c? c.v : ""));
+
+    allData = rows;
+    render(rows);
+  }catch(e){console.error(e);}
 }
 
-function parseGviz(json) {
-  const cols = json.table.cols.map(c=>c.label || c.id);
-  const rows = json.table.rows.map(r => r.c.map(cell => cell ? cell.v : ''));
-  return {cols, rows};
-}
+function render(data){
+  const tbody = document.getElementById("tableBody");
+  tbody.innerHTML = "";
 
-function formatTimestamp(ts){
-  // ts might be a Date string or number
-  if(!ts) return '';
-  const d = new Date(ts);
-  if(isNaN(d)) return ts;
-  return d.toLocaleString('id-ID', {year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-
-function renderTable(cols, rows) {
-  const tbody = document.querySelector('#dataTable tbody');
-  tbody.innerHTML = '';
-  rows.forEach(r => {
-    const tr = document.createElement('tr');
-    // Expected order in sheet: Timestamp, Nama Guru, Mata Pelajaran, Kelas, Jumlah Soal
-    const cells = [r[0], r[1], r[2], r[3], r[4]];
-    cells.forEach((c,i)=>{
-      const td = document.createElement('td');
-      td.textContent = (i===0) ? formatTimestamp(c) : (c===null||c==undefined ? '' : c);
+  data.forEach(r => {
+    const tr = document.createElement("tr");
+    r.forEach(col => {
+      const td = document.createElement("td");
+      td.textContent = col;
       tr.appendChild(td);
     });
     tbody.appendChild(tr);
   });
+
+  document.getElementById("totalUploads").textContent = data.length;
+  document.getElementById("totalClasses").textContent = new Set(data.map(r=>r[3])).size;
+  document.getElementById("totalQuestions").textContent = data.reduce((a,b)=>a+(parseInt(b[4])||0),0);
+
+  document.getElementById("lastUpdate").textContent = new Date().toLocaleString("id-ID");
 }
 
-function updateSummary(rows) {
-  document.getElementById('totalUploads').textContent = rows.length;
-  const classes = Array.from(new Set(rows.map(r=>r[3] ? String(r[3]).trim() : '').filter(Boolean)));
-  document.getElementById('totalClasses').textContent = classes.length;
-  const totalSoal = rows.reduce((s,r)=>{
-    const n = Number(r[4]);
-    return s + (isNaN(n) ? 0 : n);
-  },0);
-  document.getElementById('totalQuestions').textContent = totalSoal;
-}
-
-let lastData = [];
-async function loadAndRender(){
-  try{
-    const json = await fetchSheet();
-    const {cols, rows} = parseGviz(json);
-    // rows may include a header row if sheet has headers; our parse expects raw rows from sheet
-    // If first row contains header names matching expected, detect and remove
-    const headerLike = (rows.length && rows[0].some((c,i)=> String(c).toLowerCase().includes(cols[i].toLowerCase())));
-    const dataRows = headerLike ? rows.slice(1) : rows;
-    lastData = dataRows;
-    renderTable(cols, dataRows);
-    updateSummary(dataRows);
-    document.getElementById('lastRef').textContent = new Date().toLocaleString('id-ID');
-  }catch(err){
-    console.error(err);
-    const tbody = document.querySelector('#dataTable tbody');
-    tbody.innerHTML = '<tr><td colspan="5" style="color:#7a869a">Gagal memuat data. Pastikan sheet dapat diakses publik atau nama sheet "Rekap" benar.</td></tr>';
-  }
-}
-
-// Search filter
-const q = document.getElementById('q');
-q.addEventListener('input', ()=>{
-  const term = q.value.trim().toLowerCase();
-  const filtered = lastData.filter(r => {
-    return (r.join(' ') || '').toLowerCase().includes(term);
-  });
-  renderTable([], filtered);
-  updateSummary(filtered);
+document.getElementById("search").addEventListener("input", e=>{
+  const v = e.target.value.toLowerCase();
+  const filtered = allData.filter(r => r.join(" ").toLowerCase().includes(v));
+  render(filtered);
 });
 
-// Manual refresh
-document.getElementById('refreshBtn').addEventListener('click', ()=> loadAndRender());
-
-// Initial load + interval
-loadAndRender();
-setInterval(loadAndRender, REFRESH_INTERVAL_MS);
+loadData();
 </script>
 </body>
 </html>
