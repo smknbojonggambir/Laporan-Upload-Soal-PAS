@@ -1,134 +1,323 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Laporan Upload Soal – Simpel</title>
-  <style>
-    body{font-family:Arial, sans-serif; margin:0; background:#f2f4f7; color:#333}
-    header{background:#4f46e5; color:white; padding:28px 20px; text-align:center}
-    h1{margin:0; font-size:1.6rem}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Laporan Upload Soal – Monitoring Cepat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-light: #6366f1;
+            --bg-color: #f7f9fc;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --success-color: #10b981;
+        }
 
-    .container{max-width:900px; margin:auto; padding:16px}
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
+            background: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
 
-    .summary{display:flex; gap:10px; flex-wrap:wrap; margin-top:18px}
-    .box{flex:1; min-width:150px; background:white; padding:16px; border-radius:10px; text-align:center; box-shadow:0 3px 10px rgba(0,0,0,0.08)}
-    .box h3{margin:0; font-size:0.9rem; color:#555}
-    .box p{margin-top:6px; font-size:1.4rem; font-weight:bold; color:#111}
+        header {
+            background: var(--primary-color);
+            color: white;
+            padding: 40px 20px 30px;
+            text-align: center;
+        }
 
-    .panel{background:white; padding:16px; border-radius:10px; margin-top:20px; box-shadow:0 3px 10px rgba(0,0,0,0.05)}
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
 
-    table{width:100%; border-collapse:collapse; margin-top:12px; font-size:0.92rem}
-    th,td{padding:10px; border-bottom:1px solid #eee; text-align:left}
-    th{background:#f9fafb; font-weight:bold}
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
 
-    input{width:100%; padding:10px; border-radius:8px; border:1px solid #ccc}
+        /* --- Summary Boxes --- */
+        .summary {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: -50px; /* Tarik ke atas header */
+            position: relative;
+        }
 
-    .small{font-size:0.8rem; color:#777; margin-top:8px}
-  </style>
+        .box {
+            flex: 1;
+            min-width: 250px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            /* Shadow yang lebih tebal dan lembut */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s;
+        }
+
+        .box:hover {
+            transform: translateY(-3px);
+        }
+
+        .box h3 {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .box p {
+            margin-top: 5px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* --- Panel Utama (Tabel & Search) --- */
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* --- Search Input --- */
+        #search {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            font-size: 1rem;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+
+        #search:focus {
+            border-color: var(--primary-light);
+            outline: none;
+        }
+
+        /* --- Table Styling --- */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f3f4f6;
+            text-align: left;
+        }
+
+        th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background-color: #f7f7ff;
+        }
+
+        .small {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 15px;
+            text-align: right;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        /* Status Checkmark */
+        .checked {
+            color: var(--success-color);
+            font-weight: 700;
+            font-size: 22px;
+        }
+        
+        /* Responsive CSS */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.4rem;
+            }
+            header {
+                padding: 30px 15px 15px;
+            }
+            .container {
+                padding: 10px;
+            }
+            .summary {
+                flex-direction: column;
+                gap: 15px;
+                margin-top: -30px;
+            }
+            .box {
+                min-width: 100%;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            }
+            .box:hover {
+                transform: none;
+            }
+            .panel {
+                padding: 15px;
+                margin-top: 25px;
+            }
+            /* Making table responsive by forcing scroll */
+            .table-responsive {
+                overflow-x: auto;
+                width: 100%;
+            }
+            table {
+                min-width: 600px; /* Ensure table is wide enough to scroll */
+            }
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
 <header>
-  <h1>📊 Laporan Upload Soal</h1>
-  <p style="margin-top:6px">Update otomatis dari Google Sheet</p>
+    <h1>🚀 Monitoring Upload Soal Digital</h1>
+    <p style="margin-top:6px; font-weight: 400; opacity: 0.9;">Rekap Progres Penginputan Materi Ujian</p>
 </header>
 
 <div class="container">
 
-  <!-- Summary -->
-  <div class="summary">
-    <div class="box"><h3>Total Upload</h3><p id="totalUploads">—</p></div>
-    <div class="box"><h3>Total Kelas</h3><p id="totalClasses">—</p></div>
-    <div class="box"><h3>Total Soal</h3><p id="totalQuestions">—</p></div>
-  </div>
+    <div class="summary">
+        <div class="box"><h3>Total Sesi Upload</h3><p id="totalUploads">—</p></div>
+        <div class="box"><h3>Guru Aktif</h3><p id="totalClasses">—</p></div>
+        <div class="box"><h3>Total Soal Dibuat</h3><p id="totalQuestions">—</p></div>
+    </div>
 
-  <div class="panel">
-    <input id="search" placeholder="Cari guru, mapel, kelas..." />
-    <table>
-      <thead>
-        <tr>
-          <th>Jam Upload</th>
-          <th>Nama Guru</th>
-          <th>Mapel</th>
-          <th>Kelas</th>
-          <th>Soal</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
+    <div class="panel">
+        <input id="search" placeholder="🔍 Cari nama guru, mata pelajaran, atau kelas..." />
+        
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Jam Upload</th>
+                        <th>Nama Guru</th>
+                        <th>Mapel</th>
+                        <th>Kelas</th>
+                        <th>Soal</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
 
-<style>
-.checked {
-  color: green;
-  font-weight: bold;
-  font-size: 20px;
-}
-</style>
-<script>
-function checkLinks(){
-  const rows = document.querySelectorAll("table tbody tr");
-  rows.forEach(row => {
-    [3,4,5].forEach(i => {
-      const cell = row.children[i];
-      if(cell && cell.textContent.trim().length > 0){
-        cell.innerHTML = '<span class="checked">✔</span>';
-      }
-    });
-  });
-}
-setTimeout(checkLinks, 1000);
-</script>
-    <p class="small">Terakhir update: <span id="lastUpdate">—</span></p>
-  </div>
+        <p class="small">Data terintegrasi real-time dari Google Sheet. Terakhir update: <span id="lastUpdate">—</span></p>
+    </div>
 
 </div>
 
 <script>
-const SHEET_ID = "1eMO8-evONR5nk8_0k5hBEKF8ZYXcCC-h1htBC7h4RVs";
-const SHEET_NAME = "Rekap";
-let allData = [];
+    const SHEET_ID = "1eMO8-evONR5nk8_0k5hBEKF8ZYXcCC-h1htBC7h4RVs";
+    const SHEET_NAME = "Rekap";
+    let allData = [];
 
-async function loadData(){
-  try{
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
-    const raw = await fetch(url).then(r=>r.text());
-    const json = JSON.parse(raw.substring(raw.indexOf('{'), raw.lastIndexOf('}')+1));
+    async function loadData(){
+        try{
+            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+            const raw = await fetch(url).then(r=>r.text());
+            const json = JSON.parse(raw.substring(raw.indexOf('{'), raw.lastIndexOf('}')+1));
 
-    const rows = json.table.rows.map(r => r.c.map(c => c? c.v : ""));
+            // Skip header row if present, assuming rows[0] is data
+            const rows = json.table.rows.map(r => r.c.map(c => c? c.v : ""));
 
-    allData = rows;
-    render(rows);
-  }catch(e){console.error(e);}
-}
+            // Assuming the actual data starts from the second row (index 1) if the first row is header
+            const actualData = rows.slice(1); 
+            
+            allData = actualData;
+            render(actualData);
+        }catch(e){console.error("Error loading data:", e);}
+    }
 
-function render(data){
-  const tbody = document.getElementById("tableBody");
-  tbody.innerHTML = "";
+    function render(data){
+        const tbody = document.getElementById("tableBody");
+        tbody.innerHTML = "";
 
-  data.forEach(r => {
-    const tr = document.createElement("tr");
-    r.forEach(col => {
-      const td = document.createElement("td");
-      td.textContent = col;
-      tr.appendChild(td);
+        // Tentukan indeks kolom (sesuai urutan di tabel)
+        const IDX_TIME = 0;
+        const IDX_GURU = 1;
+        const IDX_MAPEL = 2;
+        const IDX_KELAS = 3;
+        const IDX_SOAL = 4;
+
+        let totalQuestionsCount = 0;
+        let uniqueTeachers = new Set();
+        
+        data.forEach(r => {
+            const tr = document.createElement("tr");
+
+            // Kolom 1: Jam Upload
+            let timeCol = r[IDX_TIME] || '-';
+            if (timeCol.includes("Date(")) {
+                // Formatting Google Sheets Date/Time string
+                try {
+                    const dateParts = timeCol.match(/\d+/g);
+                    const date = new Date(dateParts[0], dateParts[1], dateParts[2], dateParts[3], dateParts[4], dateParts[5]);
+                    timeCol = date.toLocaleString("id-ID", {dateStyle: 'short', timeStyle: 'short'});
+                } catch (e) { /* ignore formatting error */ }
+            }
+            tr.innerHTML += `<td>${timeCol}</td>`;
+
+            // Kolom 2: Nama Guru
+            tr.innerHTML += `<td>${r[IDX_GURU] || '-'}</td>`;
+            if (r[IDX_GURU]) uniqueTeachers.add(r[IDX_GURU]);
+
+            // Kolom 3: Mapel
+            tr.innerHTML += `<td>${r[IDX_MAPEL] || '-'}</td>`;
+
+            // Kolom 4: Kelas
+            tr.innerHTML += `<td>${r[IDX_KELAS] || '-'}</td>`;
+
+            // Kolom 5: Soal (Angka)
+            const questionCount = parseInt(r[IDX_SOAL]) || 0;
+            totalQuestionsCount += questionCount;
+            tr.innerHTML += `<td><span style="font-weight:600; color: ${questionCount > 0 ? var(--primary-color) : var(--text-light)}">${questionCount}</span></td>`;
+
+            tbody.appendChild(tr);
+        });
+
+        // Update Summary Boxes
+        document.getElementById("totalUploads").textContent = data.length;
+        document.getElementById("totalClasses").textContent = uniqueTeachers.size;
+        document.getElementById("totalQuestions").textContent = totalQuestionsCount.toLocaleString("id-ID");
+
+        document.getElementById("lastUpdate").textContent = new Date().toLocaleString("id-ID");
+    }
+
+    document.getElementById("search").addEventListener("input", e=>{
+        const v = e.target.value.toLowerCase();
+        // Filter based on the first four columns (Time, Guru, Mapel, Kelas)
+        const filtered = allData.filter(r => r.slice(0, 4).join(" ").toLowerCase().includes(v));
+        render(filtered);
     });
-    tbody.appendChild(tr);
-  });
 
-  document.getElementById("totalUploads").textContent = data.length;
-  document.getElementById("totalClasses").textContent = new Set(data.map(r=>r[3])).size;
-  document.getElementById("totalQuestions").textContent = data.reduce((a,b)=>a+(parseInt(b[4])||0),0);
-
-  document.getElementById("lastUpdate").textContent = new Date().toLocaleString("id-ID");
-}
-
-document.getElementById("search").addEventListener("input", e=>{
-  const v = e.target.value.toLowerCase();
-  const filtered = allData.filter(r => r.join(" ").toLowerCase().includes(v));
-  render(filtered);
-});
-
-loadData();
+    loadData();
 </script>
 </body>
 </html>
