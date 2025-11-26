@@ -56,6 +56,28 @@
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
+
+<style>
+.checked {
+  color: green;
+  font-weight: bold;
+  font-size: 20px;
+}
+</style>
+<script>
+function checkLinks(){
+  const rows = document.querySelectorAll("table tbody tr");
+  rows.forEach(row => {
+    [3,4,5].forEach(i => {
+      const cell = row.children[i];
+      if(cell && cell.textContent.trim().length > 0){
+        cell.innerHTML = '<span class="checked">✔</span>';
+      }
+    });
+  });
+}
+setTimeout(checkLinks, 1000);
+</script>
     <p class="small">Terakhir update: <span id="lastUpdate">—</span></p>
   </div>
 
