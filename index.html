@@ -241,25 +241,39 @@
     async function loadData(){
         try{
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
-            const raw = await fetch(url).then(r=>r.text());
-            const json = JSON.parse(raw.substring(raw.indexOf('{'), raw.lastIndexOf('}')+1));
+            
+            // Mengambil data JSON dari G-Sheet
+            const raw = await fetch(url).then(r => r.text());
+            const json = JSON.parse(raw.substring(raw.indexOf('{'), raw.lastIndexOf('}') + 1));
 
-            // Skip header row if present, assuming rows[0] is data
-            const rows = json.table.rows.map(r => r.c.map(c => c? c.v : ""));
+            // Konversi data ke array 2D
+            const rows = json.table.rows.map(r => r.c.map(c => c ? c.v : ""));
 
-            // Assuming the actual data starts from the second row (index 1) if the first row is header
-            const actualData = rows.slice(1); 
+            // Logika Pemotongan Header: 
+            // Baris header biasanya ada di index 0. Jika sheets Anda dimulai dari baris 2, gunakan slice(1).
+            // Jika sheets Anda dimulai dari baris 1 (data langsung), gunakan slice(0).
+            // Kita asumsikan baris 1 adalah header, jadi kita lewati:
+            const actualData = rows.slice(1);
+            
+            if (actualData.length === 0) {
+                console.warn("Data Kosong. Pastikan Google Sheet memiliki data selain header.");
+                document.getElementById("tableBody").innerHTML = '<tr><td colspan="5" style="text-align:center;">Tidak ada data yang tersedia.</td></tr>';
+                return;
+            }
             
             allData = actualData;
             render(actualData);
-        }catch(e){console.error("Error loading data:", e);}
+        }catch(e){
+            console.error("Kesalahan saat memuat data dari Google Sheet:", e);
+            document.getElementById("tableBody").innerHTML = '<tr><td colspan="5" style="color:red; text-align:center;">Gagal memuat data. Periksa koneksi atau URL Sheet.</td></tr>';
+        }
     }
 
     function render(data){
         const tbody = document.getElementById("tableBody");
         tbody.innerHTML = "";
 
-        // Tentukan indeks kolom (sesuai urutan di tabel)
+        // Tentukan indeks kolom (A=0, B=1, C=2, D=3, E=4)
         const IDX_TIME = 0;
         const IDX_GURU = 1;
         const IDX_MAPEL = 2;
@@ -272,21 +286,26 @@
         data.forEach(r => {
             const tr = document.createElement("tr");
 
+            // Pastikan baris memiliki minimal 5 kolom sebelum diproses
+            if (r.length < 5) return; 
+
             // Kolom 1: Jam Upload
             let timeCol = r[IDX_TIME] || '-';
             if (timeCol.includes("Date(")) {
-                // Formatting Google Sheets Date/Time string
                 try {
+                    // Ekstraksi nilai angka dari Date(...)
                     const dateParts = timeCol.match(/\d+/g);
-                    const date = new Date(dateParts[0], dateParts[1], dateParts[2], dateParts[3], dateParts[4], dateParts[5]);
+                    // Sesuaikan format JS Date, bulan dimulai dari 0 (Januari=0)
+                    const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2], dateParts[3], dateParts[4], dateParts[5]);
                     timeCol = date.toLocaleString("id-ID", {dateStyle: 'short', timeStyle: 'short'});
-                } catch (e) { /* ignore formatting error */ }
+                } catch (e) { /* Biarkan string asli jika gagal format */ }
             }
             tr.innerHTML += `<td>${timeCol}</td>`;
 
             // Kolom 2: Nama Guru
-            tr.innerHTML += `<td>${r[IDX_GURU] || '-'}</td>`;
-            if (r[IDX_GURU]) uniqueTeachers.add(r[IDX_GURU]);
+            const teacherName = r[IDX_GURU] || '-';
+            tr.innerHTML += `<td>${teacherName}</td>`;
+            if (teacherName !== '-' && teacherName !== 'Nama Guru') uniqueTeachers.add(teacherName);
 
             // Kolom 3: Mapel
             tr.innerHTML += `<td>${r[IDX_MAPEL] || '-'}</td>`;
@@ -297,7 +316,8 @@
             // Kolom 5: Soal (Angka)
             const questionCount = parseInt(r[IDX_SOAL]) || 0;
             totalQuestionsCount += questionCount;
-            tr.innerHTML += `<td><span style="font-weight:600; color: ${questionCount > 0 ? var(--primary-color) : var(--text-light)}">${questionCount}</span></td>`;
+            // Gunakan var CSS untuk warna
+            tr.innerHTML += `<td><span style="font-weight:600; color: ${questionCount > 0 ? 'var(--primary-color)' : 'var(--text-light)'}">${questionCount}</span></td>`;
 
             tbody.appendChild(tr);
         });
@@ -312,8 +332,8 @@
 
     document.getElementById("search").addEventListener("input", e=>{
         const v = e.target.value.toLowerCase();
-        // Filter based on the first four columns (Time, Guru, Mapel, Kelas)
-        const filtered = allData.filter(r => r.slice(0, 4).join(" ").toLowerCase().includes(v));
+        // Filter berdasarkan 4 kolom penting (Guru, Mapel, Kelas, Soal - Walaupun Soal angka, tapi aman di filter)
+        const filtered = allData.filter(r => r.slice(1, 5).join(" ").toLowerCase().includes(v));
         render(filtered);
     });
 
